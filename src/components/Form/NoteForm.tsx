@@ -6,7 +6,7 @@ import { Tag } from "../../types";
 import { CreateNoteProps } from "./CreateNote";
 import { v4 } from "uuid";
 
-const NoteForm = ({ onSubmit }: CreateNoteProps) => {
+const NoteForm = ({ onSubmit, availableTags, createTag }: CreateNoteProps) => {
   const navigate = useNavigate();
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
@@ -18,7 +18,7 @@ const NoteForm = ({ onSubmit }: CreateNoteProps) => {
     onSubmit({
       title: titleRef.current!.value,
       markdown: markdownRef.current!.value,
-      tags: [],
+      tags: selectedTags,
     });
   };
   return (
@@ -44,6 +44,7 @@ const NoteForm = ({ onSubmit }: CreateNoteProps) => {
                     label: text,
                     value: v4(),
                   };
+                  createTag(newTags);
                   setSelectedTags([...selectedTags, newTags]);
                 }}
                 isMulti
