@@ -6,11 +6,18 @@ import { Tag } from "../../types";
 import { CreateNoteProps } from "./CreateNote";
 import { v4 } from "uuid";
 
-const NoteForm = ({ onSubmit, availableTags, createTag }: CreateNoteProps) => {
+const NoteForm = ({
+  onSubmit,
+  availableTags,
+  createTag,
+  markdown = "",
+  tags = [],
+  title = "",
+}: CreateNoteProps) => {
   const navigate = useNavigate();
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,6 +27,7 @@ const NoteForm = ({ onSubmit, availableTags, createTag }: CreateNoteProps) => {
       markdown: markdownRef.current!.value,
       tags: selectedTags,
     });
+    navigate(-1);
   };
   return (
     <Form onSubmit={handleSubmit} className="mt-5">
@@ -29,7 +37,12 @@ const NoteForm = ({ onSubmit, availableTags, createTag }: CreateNoteProps) => {
           <Col>
             <Form.Group>
               <Form.Label>Başlık</Form.Label>
-              <Form.Control ref={titleRef} required className="shadow" />
+              <Form.Control
+                defaultValue={title}
+                ref={titleRef}
+                required
+                className="shadow"
+              />
             </Form.Group>
           </Col>
           <Col>
@@ -47,8 +60,9 @@ const NoteForm = ({ onSubmit, availableTags, createTag }: CreateNoteProps) => {
                   createTag(newTags);
                   setSelectedTags([...selectedTags, newTags]);
                 }}
+                options={availableTags}
                 isMulti
-                className="shadow"
+                className="shadow text-black"
               />
             </Form.Group>
           </Col>
@@ -58,6 +72,7 @@ const NoteForm = ({ onSubmit, availableTags, createTag }: CreateNoteProps) => {
         <Form.Group className="mt-4">
           <Form.Label>İçerik</Form.Label>
           <Form.Control
+            defaultValue={markdown}
             ref={markdownRef}
             as={"textarea"}
             className="shadow"
